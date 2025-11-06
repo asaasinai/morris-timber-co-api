@@ -3,12 +3,20 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-# SQLite database URL
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./morris_timber.db")
+# Get database URL from environment variable
+# For Vercel/production, use PostgreSQL: postgresql://user:pass@host/dbname
+# For local development, SQLite: sqlite:///./morris_timber.db
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./morris_timber.db")
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+# Configure engine based on database type
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        DATABASE_URL, connect_args={"check_same_thread": False}
+    )
+else:
+    # PostgreSQL or other databases
+    engine = create_engine(DATABASE_URL)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()

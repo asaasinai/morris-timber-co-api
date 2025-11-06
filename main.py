@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+import os
 from app.database import engine, Base
 from app.routers import (
     auth,
@@ -16,18 +17,21 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Morris Timber Co API", version="1.0.0")
 
+# Get secret key from environment variable or use default (for development)
+SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "your-secret-key-change-this-in-production")
+
 # Add session middleware (must be before CORS)
 app.add_middleware(
     SessionMiddleware,
-    secret_key="your-secret-key-change-this-in-production",  # Change this in production!
+    secret_key=SECRET_KEY,
     max_age=86400,  # 24 hours
     same_site="lax",
 )
 
-# Configure CORS
+FRONTEND_URLS = os.getenv("FRONTEND_URLS", "http://localhost:3000,http://localhost:5173,http://localhost:8080").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:8080"],  # Add your frontend URL
+    allow_origins=FRONTEND_URLS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
