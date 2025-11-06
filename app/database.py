@@ -9,8 +9,12 @@ logger = logging.getLogger(__name__)
 
 # Get database URL from environment variable
 # For Vercel/production, use PostgreSQL: postgresql://user:pass@host/dbname
-# For local development, SQLite: sqlite:///./morris_timber.db
+# For local development/Docker, SQLite: sqlite:///./data/morris_timber.db or sqlite:///./morris_timber.db
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./morris_timber.db")
+
+# For Docker, use data directory if it exists
+if os.path.exists("/app/data"):
+    DATABASE_URL = "sqlite:///./data/morris_timber.db"
 
 # Configure engine based on database type
 if DATABASE_URL.startswith("sqlite"):

@@ -34,14 +34,56 @@ source .venv/bin/activate  # On macOS/Linux
 uvicorn main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`
+The API will be available at `http://localhost:8007`
+
+## Docker Setup
+
+You can also run the project using Docker and Docker Compose:
+
+1. **Build and start services:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Run in detached mode:**
+
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **View logs:**
+
+   ```bash
+   docker-compose logs -f api
+   ```
+
+4. **Stop services:**
+
+   ```bash
+   docker-compose down
+   ```
+
+5. **Stop and remove volumes (clears database):**
+   ```bash
+   docker-compose down -v
+   ```
+
+The API will be available at `http://localhost:8007` when using Docker Compose.
+
+The Docker setup includes:
+
+- FastAPI application on port 8007
+- SQLite database (`morris_timber.db`) persisted in `./data` directory
+- Automatic database initialization
+- Volume persistence for database data
 
 ## API Documentation
 
 Once the server is running, you can access:
 
-- Interactive API docs: `http://localhost:8000/docs`
-- Alternative docs: `http://localhost:8000/redoc`
+- Interactive API docs: `http://localhost:8007/docs`
+- Alternative docs: `http://localhost:8007/redoc`
 
 ## Environment Variables
 

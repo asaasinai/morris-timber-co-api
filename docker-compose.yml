@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  api:
+    build: .
+    container_name: morris-timber-api
+    ports:
+      - "8007:8007"
+    environment:
+      DATABASE_URL: sqlite:///./morris_timber.db
+      SESSION_SECRET_KEY: ${SESSION_SECRET_KEY:-change-this-secret-key-in-production}
+      FRONTEND_URLS: ${FRONTEND_URLS:-http://localhost:3000,http://localhost:5173,http://localhost:8080}
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./app:/app/app
+      - ./main.py:/app/main.py
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./data:/app/data
+    restart: unless-stopped
+    command:
+      [
+        "uv",
+        "run",
+        "uvicorn",
+        "main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8007",
+        "--reload",
+      ]
