@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 import os
+import logging
 from app.database import engine, Base
 from app.routers import (
     auth,
@@ -12,8 +13,17 @@ from app.routers import (
     contact_messages,
 )
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Create database tables (with error handling)
+try:
+    Base.metadata.create_all(bind=engine)
+    logger.info("Database tables created successfully")
+except Exception as e:
+    logger.error(f"Error creating database tables: {e}")
+    # Continue anyway - tables might already exist or connection will be retried
 
 app = FastAPI(title="Morris Timber Co API", version="1.0.0")
 
@@ -49,6 +59,12 @@ app.include_router(contact_messages.router, prefix="/api", tags=["Contact Messag
 @app.get("/")
 async def root():
     return {"message": "Morris Timber Co API"}
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint that doesn't require database"""
+    return {"status": "ok", "service": "Morris Timber Co API"}
 
 
 if __name__ == "__main__":
