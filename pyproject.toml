@@ -1,0 +1,15 @@
+[project]
+name = "morris-timber-co-backend"
+version = "1.0.0"
+description = "FastAPI backend for Morris Timber Co website"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "sqlalchemy",
+    "bcrypt",
+    "python-multipart",
+    "itsdangerous",
+    "psycopg2-binary",
+]
+

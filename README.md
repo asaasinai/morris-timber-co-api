@@ -4,15 +4,33 @@ FastAPI backend for Morris Timber Co website.
 
 ## Setup
 
-1. Install dependencies:
+1. Install uv (if not already installed):
 
 ```bash
-pip install -r requirements.txt
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-2. Run the server:
+2. Install dependencies:
 
 ```bash
+uv sync --no-install-project
+```
+
+This will create a virtual environment (`.venv`) and install all dependencies. The `--no-install-project` flag is needed since this is an application, not a package.
+
+3. Run the server:
+
+```bash
+uv run uvicorn main:app --reload
+```
+
+Or activate the virtual environment first:
+
+```bash
+source .venv/bin/activate  # On macOS/Linux
+# or
+.venv\Scripts\activate  # On Windows
+
 uvicorn main:app --reload
 ```
 
